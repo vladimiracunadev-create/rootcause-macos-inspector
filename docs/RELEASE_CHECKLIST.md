@@ -54,6 +54,13 @@ Guion completo → [`TESTING_MACOS.md`](TESTING_MACOS.md).
 ## 6 · Publicación
 
 ```bash
+# Todo en un comando: valida, empaqueta, verifica, etiqueta y publica
+./scripts/release-product.sh --publish --watch
+```
+
+O a mano:
+
+```bash
 git tag v0.1.0
 git push origin v0.1.0
 ```

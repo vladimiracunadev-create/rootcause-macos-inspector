@@ -11,6 +11,28 @@
 
 Todo se deja en `dist/`.
 
+## Todo de una vez
+
+```bash
+./scripts/release-product.sh                       # construye y verifica dist/
+./scripts/release-product.sh --verify-environment  # comprueba el entorno primero
+./scripts/release-product.sh --publish             # además etiqueta y publica en GitHub
+./scripts/release-product.sh --publish --watch     # y espera a que el workflow acabe
+./scripts/release-product.sh --publish --tag-only  # empuja el tag; los artefactos los hace la CI
+```
+
+El orquestador encadena todo lo demás en orden: entorno → validación → `.app` universal → `.dmg` →
+`.zip` → hashes → verificación de artefactos → notas de la release → publicación.
+
+La fase de publicación comprueba seis condiciones antes de tocar el remoto: `gh` autenticado, rama
+`main`, árbol de trabajo limpio, etiqueta libre, release inexistente y binario universal. Y verifica
+que el binario y el `Info.plist` declaren la misma versión que `Cargo.toml`, porque un artefacto con
+la versión equivocada es de los errores que nadie detecta hasta que ya está publicado.
+
+> Si compilas con un Rust instalado por Homebrew (sin `rustup`), el binario universal no se puede
+> construir en local: el script lo avisa, degrada a la arquitectura nativa y te ofrece `--tag-only`
+> para que el workflow `release-macos` genere los artefactos universales.
+
 ## Generar el `.app`
 
 ```bash

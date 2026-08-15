@@ -24,12 +24,37 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 # ── Binario ──────────────────────────────────────────────────────────────────
 if [[ "$UNIVERSAL" -eq 1 ]]; then
   echo "▶ Compilando para aarch64-apple-darwin y x86_64-apple-darwin"
-  rustup target add aarch64-apple-darwin x86_64-apple-darwin >/dev/null 2>&1 || true
-  cargo build --release --target aarch64-apple-darwin
-  cargo build --release --target x86_64-apple-darwin
-  lipo -create -output "$APP/Contents/MacOS/rootcause" \
-    target/aarch64-apple-darwin/release/rootcause \
-    target/x86_64-apple-darwin/release/rootcause
+
+  # El binario universal necesita la biblioteca estándar de ambos targets, y eso
+  # solo lo aporta rustup. Con un Rust instalado por Homebrew (que trae solo el
+  # target del host) se degrada a la arquitectura nativa con un aviso claro, en
+  # vez de fallar: la CI sí construye el universal en cada release.
+  UNIVERSAL_POSIBLE=1
+  if command -v rustup >/dev/null 2>&1; then
+    rustup target add aarch64-apple-darwin x86_64-apple-darwin >/dev/null 2>&1 || true
+    for objetivo in aarch64-apple-darwin x86_64-apple-darwin; do
+      if ! cargo build --release --target "$objetivo"; then
+        UNIVERSAL_POSIBLE=0
+        break
+      fi
+    done
+  else
+    UNIVERSAL_POSIBLE=0
+    echo "  ! rustup no está instalado (¿Rust vía Homebrew?)"
+  fi
+
+  if [[ "$UNIVERSAL_POSIBLE" -eq 1 ]]; then
+    lipo -create -output "$APP/Contents/MacOS/rootcause" \
+      target/aarch64-apple-darwin/release/rootcause \
+      target/x86_64-apple-darwin/release/rootcause
+  else
+    echo "  ! No se pudo construir el universal; se usa la arquitectura nativa."
+    echo "    Para el universal en local: instala rustup desde https://rustup.rs"
+    echo "    El workflow release-macos sí publica artefactos universales."
+    cargo build --release
+    cp target/release/rootcause "$APP/Contents/MacOS/rootcause"
+    UNIVERSAL=0
+  fi
 else
   echo "▶ Compilando para la arquitectura nativa"
   cargo build --release

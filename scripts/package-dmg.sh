@@ -9,7 +9,15 @@ DIST="dist"
 APP="$DIST/RootCause.app"
 VERSION=$(grep -m1 '^version = ' Cargo.toml | cut -d'"' -f2)
 DMG="$DIST/RootCause-$VERSION.dmg"
-ESCENARIO="$DIST/dmg-stage"
+
+# `hdiutil` solo puede crear imágenes sobre APFS o HFS+. Si el repositorio vive
+# en un volumen exFAT o de red (habitual en discos externos), falla con
+# «Operación no permitida». Se monta el escenario y se crea la imagen en un
+# directorio temporal del disco interno, y luego se copia el .dmg —que es solo
+# un archivo— al destino final, que sí puede estar donde sea.
+TRABAJO=$(mktemp -d "${TMPDIR:-/tmp}/rootcause-dmg.XXXXXX")
+trap 'rm -rf "$TRABAJO"' EXIT
+ESCENARIO="$TRABAJO/stage"
 
 if [[ ! -d "$APP" ]]; then
   echo "▶ El .app no existe todavía; construyéndolo"
@@ -51,9 +59,11 @@ hdiutil create \
   -volname "RootCause $VERSION" \
   -srcfolder "$ESCENARIO" \
   -ov -format UDZO \
-  "$DMG" >/dev/null
+  "$TRABAJO/imagen.dmg" >/dev/null
 
-rm -rf "$ESCENARIO"
+mkdir -p "$DIST"
+rm -f "$DMG"
+cp "$TRABAJO/imagen.dmg" "$DMG"
 
 # ── Hashes de integridad ─────────────────────────────────────────────────────
 (

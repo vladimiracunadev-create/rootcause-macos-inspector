@@ -200,6 +200,14 @@ Referencia completa → [`docs/COMMANDS.md`](docs/COMMANDS.md).
 | **Imagen `.dmg`** | Distribución | Producción | `./scripts/package-dmg.sh` |
 | **Cask de Homebrew** | Adaptador | Plantilla | [`packaging/homebrew/`](packaging/homebrew/) |
 
+Release completa en un comando —valida, compila universal, empaqueta, verifica los artefactos y
+publica—:
+
+```bash
+./scripts/release-product.sh                      # construye dist/ y para ahí
+./scripts/release-product.sh --publish --watch    # además etiqueta, publica y espera al workflow
+```
+
 ---
 
 ## 🔐 Permisos que puede pedir

@@ -54,6 +54,13 @@ repositorio con origen **GitHub Actions**.
 Ejecuta exactamente los mismos pasos que `ci.yml`, en el mismo orden. Si pasa en local, pasa en la
 CI — salvo por diferencias del entorno del runner.
 
+Para el ciclo completo de release (validar, empaquetar, verificar y publicar) hay un orquestador
+que encadena todo:
+
+```bash
+./scripts/release-product.sh --publish --watch
+```
+
 ## Qué NO hace la CI
 
 - No firma ni notariza: eso requiere credenciales de Apple Developer.
