@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Markdownlint
         # Las convenciones del proyecto viven en .markdownlint-cli2.jsonc.
@@ -32,7 +32,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Instalar toolchain Rust estable
         uses: dtolnay/rust-toolchain@stable
@@ -71,7 +71,7 @@ jobs:
           ./target/release/rootcause persistence
 
       - name: Publicar binario release como artefacto
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: rootcause-macos-release
           path: |
