@@ -15,6 +15,7 @@ use crate::config::XProtectThresholds;
 use crate::models::{MalwareDefinition, SecurityControl, Severity, WatchedItem, XProtectStatus};
 use crate::services::macos;
 use chrono::{DateTime, Utc};
+use std::cmp::Reverse;
 use std::path::Path;
 
 /// Consulta todos los controles de seguridad y los devuelve ordenados: primero
@@ -28,7 +29,8 @@ pub fn scan_controls() -> Vec<SecurityControl> {
         firewall_stealth_mode(),
         remote_login(),
     ];
-    controls.sort_by(|left, right| right.severity.cmp(&left.severity));
+    // Reverse: primero lo que está apagado.
+    controls.sort_by_key(|control| Reverse(control.severity));
     controls
 }
 

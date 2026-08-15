@@ -12,6 +12,7 @@ use crate::models::{
     IncidentSummary, PersistenceEntry, ProcessInsight, RiskLevel, SecurityControl, Severity,
     SystemOverview, SystemSnapshot, TccOverview, XProtectStatus,
 };
+use std::cmp::Reverse;
 
 /// Entradas para construir la lista de alertas de una captura.
 pub struct AlertBuildInputs<'a> {
@@ -286,7 +287,8 @@ pub fn build_alerts(
         });
     }
 
-    alerts.sort_by(|left, right| right.severity.cmp(&left.severity));
+    // Reverse: la severidad más alta primero.
+    alerts.sort_by_key(|alert| Reverse(alert.severity));
     alerts.truncate(max_alerts);
 
     // El veredicto global es la peor señal presente, con su motivo textual.

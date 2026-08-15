@@ -588,7 +588,7 @@ impl RootCauseApp {
         visuals.window_fill = palette.panel;
         visuals.extreme_bg_color = palette.card;
         visuals.override_text_color = Some(palette.text);
-        visuals.widgets.noninteractive.bg_stroke = Stroke::new(1.0, palette.border);
+        visuals.widgets.noninteractive.bg_stroke = Stroke::new(1.0_f32, palette.border);
         visuals.widgets.inactive.bg_fill = palette.card;
         visuals.widgets.hovered.bg_fill = palette.border;
         visuals.widgets.active.bg_fill = palette.accent;
@@ -2388,7 +2388,7 @@ fn card<R>(ui: &mut Ui, contents: impl FnOnce(&mut Ui) -> R) -> R {
     let palette = pal();
     Frame::none()
         .fill(palette.card)
-        .stroke(Stroke::new(1.0, palette.border))
+        .stroke(Stroke::new(1.0_f32, palette.border))
         .rounding(Rounding::same(9.0))
         .inner_margin(Margin::symmetric(14.0, 11.0))
         .show(ui, contents)
@@ -2479,7 +2479,7 @@ fn summary_pill(ui: &mut Ui, label: &str, value: &str, severity: Severity) {
     let palette = pal();
     Frame::none()
         .fill(palette.card)
-        .stroke(Stroke::new(1.0, palette.border))
+        .stroke(Stroke::new(1.0_f32, palette.border))
         .rounding(Rounding::same(8.0))
         .inner_margin(Margin::symmetric(12.0, 8.0))
         .show(ui, |ui| {
@@ -2500,7 +2500,7 @@ fn metric_card(ui: &mut Ui, label: &str, value: &str, series: &[f32], color: Col
     let palette = pal();
     Frame::none()
         .fill(palette.card)
-        .stroke(Stroke::new(1.0, palette.border))
+        .stroke(Stroke::new(1.0_f32, palette.border))
         .rounding(Rounding::same(9.0))
         .inner_margin(Margin::symmetric(14.0, 11.0))
         .show(ui, |ui| {
@@ -2546,7 +2546,7 @@ fn sparkline(ui: &mut Ui, series: &[f32], color: Color32) {
         .collect();
 
     ui.painter()
-        .add(egui::Shape::line(points, Stroke::new(1.6, color)));
+        .add(egui::Shape::line(points, Stroke::new(1.6_f32, color)));
 }
 
 fn severity_dot(ui: &mut Ui, severity: Severity, size: f32) {
@@ -2556,7 +2556,7 @@ fn severity_dot(ui: &mut Ui, severity: Severity, size: f32) {
     ui.painter().circle_stroke(
         rect.center(),
         size / 2.0 + 2.0,
-        Stroke::new(1.0, color.gamma_multiply(0.35)),
+        Stroke::new(1.0_f32, color.gamma_multiply(0.35)),
     );
     response.on_hover_text(severity.label());
 }
