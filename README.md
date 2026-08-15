@@ -44,9 +44,17 @@ Es un **sensor forense y de apoyo a la decisión**, no un antivirus ni un EDR: n
 bloquea por firma. Detecta indicios de comportamiento, deja registro y **complementa** a las
 defensas nativas de macOS y a tu solución de seguridad.
 
-Es la edición macOS del mismo producto que
-[**RootCause Windows Inspector**](https://github.com/vladimiracunadev-create/rootcause-windows-inspector):
-misma filosofía, misma arquitectura, superficies nativas distintas.
+Es la edición macOS de una familia de cuatro sensores que comparten idea, arquitectura y
+posicionamiento, con superficies nativas distintas:
+
+| Edición | Plataforma | Tecnología |
+|---|---|---|
+| [**Windows Inspector**](https://github.com/vladimiracunadev-create/rootcause-windows-inspector) | Windows 10/11 | Rust + egui |
+| **macOS Inspector** *(este repositorio)* | macOS 13+ | Rust + egui |
+| [**Web Inspector**](https://github.com/vladimiracunadev-create/rootcause-web-inspector) | Navegador | Extensión MV3 + Node |
+| [**Mobile Inspector**](https://github.com/vladimiracunadev-create/rootcause-mobile-inspector) | Android / iOS | Flutter |
+
+Detalle en [`docs/FAMILIA_ROOTCAUSE.md`](docs/FAMILIA_ROOTCAUSE.md).
 
 ---
 
@@ -304,10 +312,14 @@ rootcause-macos-inspector/
 
 | Perfil | Documento |
 |---|---|
+| 🚀 Primera vez | [`GUIA_DE_USO_PREVIA.md`](docs/GUIA_DE_USO_PREVIA.md) |
 | 👤 Usuario final | [`MANUAL_USUARIO.md`](docs/MANUAL_USUARIO.md) · [`MANUAL_PARA_NOVATOS.md`](docs/MANUAL_PARA_NOVATOS.md) |
-| 🧑‍💻 Desarrollador | [`ARCHITECTURE.md`](docs/ARCHITECTURE.md) · [`BUILD_MACOS.md`](docs/BUILD_MACOS.md) |
-| 🛡️ Seguridad | [`DETECCION_AMENAZAS.md`](docs/DETECCION_AMENAZAS.md) · [`HEURISTICAS.md`](docs/HEURISTICAS.md) · [`PERSISTENCIA_MACOS.md`](docs/PERSISTENCIA_MACOS.md) |
+| 🧑‍💻 Desarrollador | [`ARCHITECTURE.md`](docs/ARCHITECTURE.md) · [`RUST_PARA_ROOTCAUSE.md`](docs/RUST_PARA_ROOTCAUSE.md) · [`BUILD_MACOS.md`](docs/BUILD_MACOS.md) |
+| 🛡️ Seguridad | [`DETECCION_AMENAZAS.md`](docs/DETECCION_AMENAZAS.md) · [`HEURISTICAS.md`](docs/HEURISTICAS.md) · [`PERSISTENCIA_MACOS.md`](docs/PERSISTENCIA_MACOS.md) · [`MODULO_DETECCION_ANOMALIAS.md`](docs/MODULO_DETECCION_ANOMALIAS.md) |
 | 🔐 Permisos | [`PERMISOS_MACOS.md`](docs/PERMISOS_MACOS.md) · [`POLITICA_DE_PRIVACIDAD_LOCAL.md`](docs/POLITICA_DE_PRIVACIDAD_LOCAL.md) |
+| 🔬 Arquitectura | [`ARQUITECTURA_ESCALABILIDAD.md`](docs/ARQUITECTURA_ESCALABILIDAD.md) · [`ARQUITECTURA_EVOLUTIVA.md`](docs/ARQUITECTURA_EVOLUTIVA.md) |
+| 🏢 Reclutador | [`RECLUTADORES.md`](docs/RECLUTADORES.md) · [`REPOSITORIO_ANALISIS.md`](docs/REPOSITORIO_ANALISIS.md) |
+| 🗺️ Producto | [`PLAN_MAESTRO.md`](docs/PLAN_MAESTRO.md) · [`CATALOGO_PRODUCTO.md`](docs/CATALOGO_PRODUCTO.md) · [`COMPARATIVA_OSS.md`](docs/COMPARATIVA_OSS.md) |
 | 📦 Distribución | [`PACKAGING_MACOS.md`](docs/PACKAGING_MACOS.md) · [`RELEASE_CHECKLIST.md`](docs/RELEASE_CHECKLIST.md) |
 | 📑 Todo | [`INDEX.md`](docs/INDEX.md) |
 
