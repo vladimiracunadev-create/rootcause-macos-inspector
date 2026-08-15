@@ -1,0 +1,20 @@
+/target
+**/*.rs.bk
+*.pdb
+
+# Artefactos de empaquetado
+/dist
+*.dmg
+*.app
+!packaging/macos/*.app
+
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# Editores
+.vscode/
+.idea/
+*.swp

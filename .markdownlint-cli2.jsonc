@@ -1,0 +1,30 @@
+{
+  // Convenciones de Markdown del proyecto.
+  //
+  // La documentación se escribe con líneas de hasta 100 caracteres: cabe en una
+  // pantalla partida y evita reflujos ruidosos en los diffs. Las tablas, los
+  // bloques de código y los enlaces largos quedan exentos porque partirlos los
+  // rompería.
+  "config": {
+    "MD013": {
+      "line_length": 100,
+      "tables": false,
+      "code_blocks": false,
+      "headings": false
+    },
+    // Las tablas usan el separador compacto (`|---|---|`) con contenido
+    // espaciado. Es legible en el fuente y correcto al renderizar; alinear cada
+    // pipe a mano no aporta y genera diffs enormes al editar una celda.
+    "MD060": false,
+    // El README abre con el banner ASCII de marca dentro de un bloque de código.
+    "MD041": false
+  },
+  "globs": ["**/*.md"],
+  "ignores": [
+    "target",
+    "dist",
+    "node_modules",
+    // Bifurcaciones AppleDouble que crean los volúmenes exFAT/FAT.
+    "**/._*"
+  ]
+}

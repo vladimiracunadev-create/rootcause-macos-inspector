@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RootCause macOS Inspector — Monitor forense para macOS</title>
+<meta name="description" content="Monitor forense ligero para macOS escrito en Rust: LaunchAgents y LaunchDaemons, procesos, Gatekeeper, XProtect, permisos TCC, red y persistencia. Análisis 100 % local.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-label="RootCause">
+      <circle cx="32" cy="32" r="24" fill="none" stroke="#1f6feb" stroke-width="3"/>
+      <circle cx="32" cy="32" r="12" fill="none" stroke="#1f6feb" stroke-width="3"/>
+      <circle cx="32" cy="32" r="4" fill="#1f6feb"/>
+    </svg>
+    <h1>RootCause macOS Inspector</h1>
+    <p class="tagline">
+      Software forense de ciberseguridad para macOS, escrito en Rust.
+      Observa lo que cambia en tu Mac y te explica dónde mirar, con evidencia.
+    </p>
+    <p class="claim">Diagnóstico primero. Intervención después.</p>
+    <div class="badges">
+      <span class="badge">Rust</span>
+      <span class="badge">macOS 13+</span>
+      <span class="badge">Apache 2.0</span>
+      <span class="badge">Análisis 100 % local</span>
+      <span class="badge">GUI + CLI</span>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/vladimiracunadev-create/rootcause-macos-inspector">Ver en GitHub</a>
+      <a class="btn" href="https://github.com/vladimiracunadev-create/rootcause-macos-inspector/blob/main/docs/MANUAL_USUARIO.md">Manual de usuario</a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>La idea que lo explica todo</h2>
+    <p class="sub">
+      Cualquier distorsión anómala de los recursos o de la configuración de un equipo puede ser el
+      primer indicio de que algo está ocurriendo.
+    </p>
+    <p style="color: var(--dim);">
+      No solo lentitud: también un LaunchDaemon que apareció anoche, Gatekeeper apagado, una app con
+      Acceso total al disco que nadie recuerda haber autorizado, un binario sin firmar hablando con
+      cuatro destinos públicos o un equipo desconocido en tu segmento de red.
+      <strong style="color: var(--text);">RootCause vigila esas distorsiones sin necesidad de saber
+      qué las causa</strong>, las correlaciona en incidentes y explica la causa raíz con evidencia.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Las siete superficies que observa</h2>
+    <p class="sub">Cada una traducida a lo que macOS realmente usa, no a lo que usa Windows.</p>
+    <div class="grid">
+      <div class="card">
+        <h3><span class="dot crit"></span> Persistencia</h3>
+        <p>LaunchAgents, LaunchDaemons, login items y <code>cron</code>: todo lo que sobrevive a un reinicio. Es donde vive un implante.</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot accent"></span> Procesos y firma</h3>
+        <p>Consumo, ruta y verificación con <code>codesign</code>. Un binario sin firma fuera del sistema es una señal fuerte en macOS.</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot warn"></span> Controles nativos</h3>
+        <p>Gatekeeper, SIP, FileVault, firewall y SSH — cada uno con la salida cruda del comando que lo respondió.</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot ok"></span> XProtect</h3>
+        <p>Versión y antigüedad de las definiciones antimalware de Apple. Firmas de hace meses significan actualizaciones rotas.</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot warn"></span> Privacidad (TCC)</h3>
+        <p>Quién puede grabar la pantalla, leer el teclado o acceder a todo el disco, leído de <code>TCC.db</code>.</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot accent"></span> Red</h3>
+        <p>Conexiones por proceso, puertos expuestos y vecinos del segmento. Un cambio de MAC en el router es crítico.</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot ok"></span> Almacenamiento</h3>
+        <p>Cachés medidas por raíz con limpieza segura de dos pasos, acotada a <code>~/Library/Caches</code>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>El motor de baseline</h2>
+    <p class="sub">La idea central cabe en un párrafo.</p>
+    <p style="color: var(--dim); margin-bottom: 24px;">
+      La primera captura se guarda <strong style="color: var(--text);">en silencio</strong> como
+      «estado bueno conocido». A partir de ahí, cada superficie se compara contra esa foto y todo
+      cambio se clasifica como <strong style="color: var(--text);">NUEVA</strong>,
+      <strong style="color: var(--text);">MODIFICADA</strong> o
+      <strong style="color: var(--text);">ELIMINADA</strong>. Los cambios son pegajosos: se siguen
+      reportando hasta que alguien los acepta explícitamente. Una alerta que se auto-silencia tras
+      un reinicio es peor que no tenerla.
+    </p>
+    <table>
+      <tr><th>Superficie</th><th>Riesgo al cambiar</th></tr>
+      <tr><td>Persistencia</td><td>Alto — crítico si la entrada además es sospechosa por sí misma</td></tr>
+      <tr><td>Controles de seguridad</td><td>Alto</td></tr>
+      <tr><td>Permisos TCC sensibles</td><td>Alto</td></tr>
+      <tr><td>Equipos de la red</td><td>Medio — crítico si cambia la MAC de la puerta de enlace</td></tr>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Empezar</h2>
+    <p class="sub">Sin instalador opaco: se compila desde el código, y así se puede auditar.</p>
+<pre><code># Verificar el entorno
+./scripts/verify-environment.sh
+
+# Compilar
+cargo build --release
+
+# Interfaz gráfica
+./target/release/rootcause
+
+# O consola
+./target/release/rootcause status
+./target/release/rootcause persistence
+./target/release/rootcause security
+./target/release/rootcause tcc --sensitive</code></pre>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Privacidad</h2>
+    <p class="sub">No hay servidor, ni cuenta, ni telemetría, ni comprobación de actualizaciones.</p>
+    <ul>
+      <li>Todo se guarda en <code>~/Library/Application Support/RootCauseInspector/</code></li>
+      <li>No abre puertos ni acepta conexiones entrantes</li>
+      <li>No pide permisos en silencio: los dos que puede necesitar los concedes tú</li>
+      <li>El adaptador de IA opcional viene apagado y solo enviaría el incidente ya resumido</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Limitaciones honestas</h2>
+    <p class="sub">Un producto de seguridad que exagera lo que cubre es peor que uno que no existe.</p>
+    <ul class="honest">
+      <li>No elimina malware ni pone nada en cuarentena: señala dónde mirar y deja evidencia</li>
+      <li>Muestrea cada pocos segundos; no intercepta en tiempo real</li>
+      <li>No reconoce familias de malware: detecta comportamiento y cambios</li>
+      <li>No resiste a un atacante con privilegios de root, aunque su manipulación deja rastro</li>
+      <li>Sin Acceso total al disco no puede auditar los permisos TCC, y lo dice</li>
+      <li>No se distribuye firmado ni notarizado por Apple</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>
+      Apache 2.0 · Vladimir Acuña ·
+      <a href="https://github.com/vladimiracunadev-create/rootcause-macos-inspector">macOS</a> ·
+      <a href="https://github.com/vladimiracunadev-create/rootcause-windows-inspector">Windows</a>
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>

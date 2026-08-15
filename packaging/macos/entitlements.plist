@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!-- RootCause no está en sandbox: necesita leer plists de launchd y ejecutar
+       utilidades del sistema. Estos entitlements solo aplican si firmas tu
+       propia compilación con una cuenta de Apple Developer. -->
+  <key>com.apple.security.app-sandbox</key>
+  <false/>
+  <key>com.apple.security.cs.allow-jit</key>
+  <false/>
+  <key>com.apple.security.cs.disable-library-validation</key>
+  <false/>
+  <!-- Necesario para lanzar utilidades nativas (lsof, spctl, codesign…). -->
+  <key>com.apple.security.inherit</key>
+  <false/>
+  <!-- El adaptador de IA opcional usa curl; sin esto no habría salida de red. -->
+  <key>com.apple.security.network.client</key>
+  <true/>
+</dict>
+</plist>

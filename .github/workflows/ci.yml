@@ -1,0 +1,84 @@
+name: ci-macos
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  docs:
+    name: validar-documentacion
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Markdownlint
+        # Las convenciones del proyecto viven en .markdownlint-cli2.jsonc.
+        run: npx --yes markdownlint-cli2
+
+  validate:
+    name: validar-formato-lint-test-build
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Instalar toolchain Rust estable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache de cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Versiones
+        run: |
+          cargo --version
+          rustc --version
+          sw_vers
+
+      - name: Formato
+        run: cargo fmt --all -- --check
+
+      - name: Análisis estático
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Tests
+        run: cargo test --all-features -- --nocapture
+
+      - name: Build edición CLI-only
+        run: cargo build --release --no-default-features
+
+      - name: Build edición completa
+        run: cargo build --release
+
+      - name: Humo — la CLI responde
+        run: |
+          ./target/release/rootcause --version
+          ./target/release/rootcause --help > /dev/null
+          ./target/release/rootcause security
+          ./target/release/rootcause persistence
+
+      - name: Publicar binario release como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: rootcause-macos-release
+          path: |
+            target/release/rootcause
+            README.md
+            LICENSE
+            SECURITY.md
+            docs/**
+            scripts/**
+          if-no-files-found: error

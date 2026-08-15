@@ -1,0 +1,92 @@
+name: release-macos
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  release:
+    name: construir-app-dmg-y-hashes
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Instalar toolchain Rust con ambos targets
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
+
+      - name: Cache de cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Validar antes de empaquetar
+        run: |
+          cargo fmt --all -- --check
+          cargo clippy --all-targets --all-features -- -D warnings
+          cargo test --all-features
+
+      - name: Construir .app universal
+        run: ./scripts/package-app.sh --universal
+
+      - name: Verificar que el binario es universal
+        run: lipo -info dist/RootCause.app/Contents/MacOS/rootcause
+
+      - name: Construir .dmg y hashes
+        run: ./scripts/package-dmg.sh
+
+      - name: Comprimir el .app
+        run: |
+          cd dist
+          zip -qry RootCause-app.zip RootCause.app
+          shasum -a 256 RootCause-app.zip >> SHA256SUMS.txt
+
+      - name: Listar artefactos
+        run: ls -lh dist && cat dist/SHA256SUMS.txt
+
+      - name: Publicar artefactos como artefacto del workflow
+        uses: actions/upload-artifact@v4
+        with:
+          name: rootcause-macos-dist
+          path: |
+            dist/*.dmg
+            dist/RootCause-app.zip
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
+
+      - name: Crear release de GitHub
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.dmg
+            dist/RootCause-app.zip
+            dist/SHA256SUMS.txt
+          generate_release_notes: true
+          body: |
+            ## RootCause macOS Inspector
+
+            Monitor forense para macOS: LaunchAgents/Daemons, procesos, Gatekeeper, XProtect,
+            permisos TCC, red y persistencia.
+
+            ### Artefactos
+
+            | Archivo | Contenido |
+            |---|---|
+            | `RootCause-*.dmg` | Imagen de disco con la app |
+            | `RootCause-app.zip` | Bundle `.app` comprimido |
+            | `SHA256SUMS.txt` | Hashes de integridad |
+
+            ### Nota sobre Gatekeeper
+
+            Los binarios **no están firmados ni notarizados**. Al abrir la app por primera vez,
+            autorízala en Ajustes del Sistema → Privacidad y seguridad, o compílala tú desde el
+            código fuente (`cargo build --release`), que es la vía recomendada.
