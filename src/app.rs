@@ -396,6 +396,12 @@ impl Tab {
 
 // ── Aplicación ──────────────────────────────────────────────────────────────
 
+/// Estado completo de la interfaz.
+///
+/// Guarda el extremo de los canales hacia el hilo del motor, la última
+/// captura recibida, los buffers de tendencia y los filtros de cada sección.
+/// La vista nunca consulta el sistema por su cuenta: todo lo que pinta llega
+/// como [`EngineEvent`].
 pub struct RootCauseApp {
     commands: Sender<Command>,
     responses: Receiver<EngineEvent>,
@@ -434,6 +440,8 @@ pub struct RootCauseApp {
 }
 
 impl RootCauseApp {
+    /// Arranca el hilo del motor, aplica el estilo y pide la primera captura
+    /// antes de dibujar el primer frame.
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
         let (commands, responses) = spawn_worker(cc.egui_ctx.clone());
         configure_style(&cc.egui_ctx);

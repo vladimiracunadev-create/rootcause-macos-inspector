@@ -193,6 +193,7 @@ impl ResilienceMonitor {
         Ok(monitor)
     }
 
+    /// Estado de salud calculado al arrancar esta sesión.
     pub fn health(&self) -> &AgentHealth {
         &self.health
     }

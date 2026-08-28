@@ -25,6 +25,7 @@ use serde_json::{json, Value};
 use std::env;
 use std::process::Command;
 
+/// Cliente del proveedor IA configurado. No conserva estado entre llamadas.
 pub struct AiAdvisor {
     config: AiConfig,
 }
@@ -44,6 +45,7 @@ struct AiOutputShape {
 }
 
 impl AiAdvisor {
+    /// Crea el adaptador con la configuración dada; todavía no valida nada.
     pub fn new(config: AiConfig) -> Self {
         Self { config }
     }

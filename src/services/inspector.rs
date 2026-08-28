@@ -125,18 +125,22 @@ impl InspectorService {
 
     // ── Accesores ───────────────────────────────────────────────────────────
 
+    /// Configuración efectiva del motor.
     pub fn config(&self) -> &RootCauseConfig {
         &self.config
     }
 
+    /// Ruta del archivo de configuración en uso.
     pub fn config_path(&self) -> &Path {
         &self.config_path
     }
 
+    /// Ruta del SQLite donde vive el historial.
     pub fn db_path(&self) -> &Path {
         self.store.db_path()
     }
 
+    /// Crea el archivo de configuración por defecto si falta y devuelve su ruta.
     pub fn write_default_config_if_missing(&self) -> Result<String> {
         Ok(ConfigManager::write_default_if_missing(meta::APP_DIR)?
             .display()
@@ -150,14 +154,17 @@ impl InspectorService {
         Ok(())
     }
 
+    /// Últimas `limit` filas del historial de capturas.
     pub fn load_history(&self, limit: usize) -> Vec<SnapshotRow> {
         self.store.load_recent(limit).unwrap_or_default()
     }
 
+    /// Últimos `limit` incidentes persistidos.
     pub fn load_incidents(&self, limit: usize) -> Vec<IncidentSummary> {
         self.store.load_recent_incidents(limit).unwrap_or_default()
     }
 
+    /// Últimos `limit` registros de auditoría.
     pub fn load_audits(&self, limit: usize) -> Vec<AuditRecord> {
         self.store.load_recent_audits(limit).unwrap_or_default()
     }
@@ -184,6 +191,7 @@ impl InspectorService {
         macos::notify(&format!("RootCause · {}", alert.title), &alert.detail);
     }
 
+    /// Incidente más reciente, si hay alguno persistido.
     pub fn latest_incident(&self) -> Option<IncidentSummary> {
         self.store.latest_incident().ok().flatten()
     }
@@ -973,6 +981,7 @@ impl InspectorService {
         Ok(path.display().to_string())
     }
 
+    /// Copia el historial reciente a un JSON junto al SQLite y devuelve la ruta.
     pub fn export_history_backup(&self) -> Result<String> {
         Ok(self
             .store

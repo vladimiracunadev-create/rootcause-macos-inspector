@@ -64,6 +64,34 @@ Toda la documentación de RootCause macOS Inspector, agrupada por para qué sirv
 | [`RECLUTADORES.md`](RECLUTADORES.md) | Qué demuestra el proyecto, para evaluación técnica |
 | [`REPOSITORIO_ANALISIS.md`](REPOSITORIO_ANALISIS.md) | Qué hay dentro, con su deuda técnica reconocida |
 
+## Documentación de sistema
+
+Conjunto completo de documentación técnica verificada contra el código, con versión en PDF.
+
+| Documento | Para qué |
+|---|---|
+| [`system-documentation/README.md`](system-documentation/README.md) | Portada e índice de los 20 documentos |
+| [`01-system-overview.md`](system-documentation/01-system-overview.md) | Qué es el sistema, con explicación para lectores no técnicos |
+| [`02-installation-and-execution.md`](system-documentation/02-installation-and-execution.md) | De repositorio clonado a binario funcionando |
+| [`03-architecture.md`](system-documentation/03-architecture.md) | Capas, patrones y diagramas |
+| [`04-code-map.md`](system-documentation/04-code-map.md) | Inventario archivo por archivo |
+| [`05-technical-reference.md`](system-documentation/05-technical-reference.md) | Catálogo de tipos, funciones, comandos y errores |
+| [`06-deep-code-explanation.md`](system-documentation/06-deep-code-explanation.md) | Cómo funciona cada módulo por dentro |
+| [`07-database.md`](system-documentation/07-database.md) | Esquema SQLite y diccionario de datos |
+| [`08-data-flow.md`](system-documentation/08-data-flow.md) | Un dato, de la utilidad de macOS al incidente |
+| [`09-apis-and-integrations.md`](system-documentation/09-apis-and-integrations.md) | CLI como API, utilidades nativas e IA opcional |
+| [`10-configuration.md`](system-documentation/10-configuration.md) | `rootcause-config.json` campo por campo |
+| [`11-security.md`](system-documentation/11-security.md) | Seguridad del propio producto |
+| [`12-testing-and-quality.md`](system-documentation/12-testing-and-quality.md) | Los 112 tests y los huecos priorizados |
+| [`13-deployment-and-operations.md`](system-documentation/13-deployment-and-operations.md) | Construcción, release y operación diaria |
+| [`14-troubleshooting.md`](system-documentation/14-troubleshooting.md) | Síntoma → causa → diagnóstico → solución |
+| [`15-risks-and-technical-debt.md`](system-documentation/15-risks-and-technical-debt.md) | 24 hallazgos clasificados |
+| [`16-glossary.md`](system-documentation/16-glossary.md) | Términos explicados sin jerga |
+| [`17-executive-summary.md`](system-documentation/17-executive-summary.md) | El sistema para tomar decisiones |
+| [`18-new-developer-guide.md`](system-documentation/18-new-developer-guide.md) | Itinerario de incorporación |
+| [`19-traceability-matrix.md`](system-documentation/19-traceability-matrix.md) | Funcionalidad → función → dato → prueba |
+| [`pdf/`](system-documentation/pdf/) | Los 20 documentos en PDF |
+
 ## Evolución
 
 | Documento | Para qué |

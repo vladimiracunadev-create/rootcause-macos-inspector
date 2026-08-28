@@ -250,6 +250,7 @@ rootcause-macos-inspector/
 ├── Cargo.toml              ← versión, features (gui / cli-only), dependencias
 ├── README.md · LICENSE · SECURITY.md
 ├── docs/                   ← documentación de arquitectura, uso, operación y producto
+│   └── system-documentation/  ← 20 documentos de sistema + PDF
 ├── landing/                ← página del producto (GitHub Pages)
 ├── packaging/
 │   ├── macos/              ← Info.plist y entitlements del .app
@@ -322,6 +323,37 @@ rootcause-macos-inspector/
 | 🗺️ Producto | [`PLAN_MAESTRO.md`](docs/PLAN_MAESTRO.md) · [`CATALOGO_PRODUCTO.md`](docs/CATALOGO_PRODUCTO.md) · [`COMPARATIVA_OSS.md`](docs/COMPARATIVA_OSS.md) |
 | 📦 Distribución | [`PACKAGING_MACOS.md`](docs/PACKAGING_MACOS.md) · [`RELEASE_CHECKLIST.md`](docs/RELEASE_CHECKLIST.md) |
 | 📑 Todo | [`INDEX.md`](docs/INDEX.md) |
+| 🔬 Documentación de sistema | [`system-documentation/`](docs/system-documentation/README.md) |
+
+---
+
+## 📖 Documentación del sistema
+
+Además de la documentación de producto de `docs/`, el repositorio incluye un conjunto
+completo de **documentación de sistema**: 20 documentos que explican el código, la
+arquitectura, la base de datos, la seguridad y la operación, verificados contra el código y
+con su versión en PDF.
+
+- [Índice general de documentación](docs/system-documentation/README.md)
+- [Descripción general](docs/system-documentation/01-system-overview.md)
+- [Instalación y ejecución](docs/system-documentation/02-installation-and-execution.md)
+- [Arquitectura](docs/system-documentation/03-architecture.md)
+- [Mapa completo del código](docs/system-documentation/04-code-map.md)
+- [Referencia técnica](docs/system-documentation/05-technical-reference.md)
+- [Explicación profunda del código](docs/system-documentation/06-deep-code-explanation.md)
+- [Base de datos](docs/system-documentation/07-database.md)
+- [Seguridad](docs/system-documentation/11-security.md)
+- [Riesgos y deuda técnica](docs/system-documentation/15-risks-and-technical-debt.md)
+- [Resumen ejecutivo](docs/system-documentation/17-executive-summary.md)
+- [Guía para nuevos desarrolladores](docs/system-documentation/18-new-developer-guide.md)
+- [Documentos en PDF](docs/system-documentation/pdf/)
+
+Los Markdown son la fuente única; los PDF se regeneran con:
+
+```bash
+python3 -m pip install markdown xhtml2pdf
+python3 scripts/build-docs-pdf.py
+```
 
 ---
 

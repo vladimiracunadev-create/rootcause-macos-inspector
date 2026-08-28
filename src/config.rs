@@ -12,6 +12,9 @@ use std::path::{Path, PathBuf};
 const DEFAULT_CONFIG_FILE: &str = "rootcause-config.json";
 const DEFAULT_APP_DIR: &str = "RootCauseInspector";
 
+/// Configuración completa del producto, tal como se serializa en
+/// `rootcause-config.json`. Cada sección tiene `Default`, así que un archivo
+/// parcial —o vacío— sigue siendo válido y solo sobrescribe lo que declara.
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct RootCauseConfig {
     #[serde(default)]
@@ -59,6 +62,8 @@ pub struct UiConfig {
     pub daily_report: bool,
 }
 
+/// Ritmo y alcance de la captura: cada cuánto se refresca, cuánto historial
+/// se conserva y cuánta verificación de firma cabe en una captura.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CollectionConfig {
     #[serde(default = "default_refresh_interval_secs")]
@@ -88,6 +93,7 @@ impl Default for CollectionConfig {
     }
 }
 
+/// Umbrales de severidad agrupados por superficie.
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct ThresholdsConfig {
     #[serde(default)]
@@ -98,6 +104,8 @@ pub struct ThresholdsConfig {
     pub xprotect: XProtectThresholds,
 }
 
+/// Parámetros del motor de anomalías: umbrales sostenidos, listas de
+/// confianza y qué superficies se comparan contra baseline.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AnomalyConfig {
     #[serde(default = "default_true")]
@@ -177,6 +185,7 @@ impl Default for AnomalyConfig {
     }
 }
 
+/// Umbrales por proceso para CPU, memoria y escritura de disco.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ProcessThresholds {
     #[serde(default = "default_process_cpu_warning")]
@@ -206,6 +215,7 @@ impl Default for ProcessThresholds {
     }
 }
 
+/// Tamaño a partir del cual una caché se reporta como voluminosa.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CacheThresholds {
     #[serde(default = "default_cache_warning")]
@@ -241,6 +251,7 @@ impl Default for XProtectThresholds {
     }
 }
 
+/// Política de alertas: cuántas se muestran y cómo se notifica lo crítico.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AlertingConfig {
     #[serde(default = "default_max_alerts")]
@@ -261,6 +272,8 @@ impl Default for AlertingConfig {
     }
 }
 
+/// Política de intervención. Separa lo que el usuario puede hacer a mano de
+/// lo automático, que en este producto está siempre apagado.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RemediationConfig {
     #[serde(default = "default_true")]
@@ -280,6 +293,8 @@ impl Default for RemediationConfig {
     }
 }
 
+/// Autoprotección del agente: latido, ventana de reinicios y vigilancia de
+/// la integridad del archivo de configuración.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ResilienceConfig {
     #[serde(default = "default_true")]
@@ -309,6 +324,8 @@ impl Default for ResilienceConfig {
     }
 }
 
+/// Adaptador IA opcional. Apagado por defecto; la clave nunca se guarda aquí,
+/// solo el nombre de la variable de entorno que la contiene.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AiConfig {
     #[serde(default)]
@@ -335,6 +352,7 @@ impl Default for AiConfig {
     }
 }
 
+/// Carga, valida y guarda la configuración en disco.
 #[derive(Debug, Clone)]
 pub struct ConfigManager {
     path: PathBuf,
@@ -342,6 +360,11 @@ pub struct ConfigManager {
 }
 
 impl ConfigManager {
+    /// Carga la configuración del usuario.
+    ///
+    /// Nunca falla: si el archivo no existe se usan los valores por defecto en
+    /// silencio, y si existe pero es inválido se usan igualmente devolviendo una
+    /// advertencia, para que la interfaz la muestre en vez de callarla.
     pub fn load_or_default(app_name: &str) -> (Self, Option<String>) {
         let path = config_path(app_name);
         let path_display = path.display().to_string();
@@ -377,6 +400,8 @@ impl ConfigManager {
         }
     }
 
+    /// Escribe la configuración por defecto si todavía no hay archivo. Devuelve
+    /// la ruta en ambos casos.
     pub fn write_default_if_missing(app_name: &str) -> anyhow::Result<PathBuf> {
         let path = config_path(app_name);
         if path.exists() {
@@ -389,10 +414,12 @@ impl ConfigManager {
         Ok(path)
     }
 
+    /// Ruta del archivo de configuración en uso.
     pub fn path(&self) -> &Path {
         &self.path
     }
 
+    /// Configuración efectiva ya cargada.
     pub fn config(&self) -> &RootCauseConfig {
         &self.config
     }
@@ -422,6 +449,7 @@ pub fn config_path(app_name: &str) -> PathBuf {
         .join(DEFAULT_CONFIG_FILE)
 }
 
+/// Configuración por defecto serializada: es lo que escribe `config init`.
 pub fn example_config_json() -> anyhow::Result<String> {
     Ok(serde_json::to_string_pretty(&RootCauseConfig::default())?)
 }

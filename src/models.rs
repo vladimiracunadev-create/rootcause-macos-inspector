@@ -40,6 +40,7 @@ pub enum RiskLevel {
 }
 
 impl RiskLevel {
+    /// Texto humano del nivel de riesgo.
     pub fn label(self) -> &'static str {
         match self {
             Self::Low => "Bajo",
@@ -49,6 +50,8 @@ impl RiskLevel {
         }
     }
 
+    /// Traduce el riesgo del motor de anomalías al semáforo de la interfaz.
+    /// Alto y crítico comparten el rojo porque ambos piden mirar ahora.
     pub fn to_severity(self) -> Severity {
         match self {
             Self::Low => Severity::Healthy,
@@ -68,6 +71,7 @@ pub enum AgentStatus {
 }
 
 impl AgentStatus {
+    /// Texto humano del estado del agente.
     pub fn label(self) -> &'static str {
         match self {
             Self::Healthy => "Saludable",
@@ -151,6 +155,7 @@ pub enum CodeSignature {
 }
 
 impl CodeSignature {
+    /// Texto humano del estado de firma.
     pub fn label(self) -> &'static str {
         match self {
             Self::Apple => "Apple",
@@ -263,6 +268,7 @@ pub enum PersistenceScope {
 }
 
 impl PersistenceScope {
+    /// Nombre legible del ámbito, para la interfaz y el CLI.
     pub fn label(self) -> &'static str {
         match self {
             Self::UserAgent => "LaunchAgent (usuario)",

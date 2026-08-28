@@ -188,6 +188,7 @@ impl PersistenceStore {
         Ok(rows_out)
     }
 
+    /// Últimos `limit` incidentes, del más reciente al más antiguo.
     pub fn load_recent_incidents(&self, limit: usize) -> Result<Vec<IncidentSummary>> {
         let connection = Connection::open(&self.db_path)?;
         let mut statement =
@@ -203,6 +204,7 @@ impl PersistenceStore {
         Ok(incidents)
     }
 
+    /// Incidente más reciente ya deserializado.
     pub fn latest_incident(&self) -> Result<Option<IncidentSummary>> {
         let connection = Connection::open(&self.db_path)?;
         let payload = connection
