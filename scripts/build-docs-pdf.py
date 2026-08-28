@@ -203,6 +203,10 @@ th { background-color: #0d3b66; color: #ffffff; border: 0.5pt solid #0d3b66; pad
      text-align: left; font-weight: bold; }
 td { border: 0.5pt solid #c9d6e8; padding: 3.2pt 4pt; vertical-align: top;
      word-wrap: break-word; }
+/* El código dentro de una celda va al tamaño del texto de la tabla, no al del
+   cuerpo: a 8pt exige más ancho de columna del disponible y obliga a partir
+   identificadores que a 7.4pt caben enteros. */
+td code, th code { font-size: 7.4pt; }
 hr { border: none; border-top: 0.5pt solid #c9d6e8; margin: 10pt 0; }
 .cover { text-align: center; padding-top: 3.0cm; }
 .cover-system { font-size: 12pt; color: #1f6feb; letter-spacing: 1.2pt; margin-bottom: 6pt; }
@@ -253,9 +257,9 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 
 
 # Longitud a partir de la cual un identificador dentro de una celda se parte.
-# Con la fuente monoespaciada de las tablas (7,4 pt), una columna estrecha admite
-# del orden de 16 caracteres antes de desbordar sobre la columna siguiente.
-MAX_CODE_CHARS_IN_CELL = 16
+# Con la fuente monoespaciada de las celdas (7,4 pt), una columna estrecha admite
+# del orden de 18 caracteres antes de desbordar sobre la columna siguiente.
+MAX_CODE_CHARS_IN_CELL = 18
 
 
 def _split_long_token(token: str) -> str:
